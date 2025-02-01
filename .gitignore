@@ -1,0 +1,10 @@
+.venv
+secrets/
+.env
+
+deploy_key*
+
+.acme
+letsencrypt
+
+__pycache__

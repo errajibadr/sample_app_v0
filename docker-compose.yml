@@ -1,0 +1,68 @@
+services:
+
+  api:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    deploy:
+      mode: replicated
+      replicas: 1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8087/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - PYTHONUNBUFFERED=0
+      - PYTHONPATH=/app
+    command: >
+      sh -c "export DATABASE_URL=postgresql://`cat /run/secrets/postgres_user`:`cat /run/secrets/postgres_password`@db:5432/clickdb &&
+             python sample_api.py"
+    depends_on:
+      db : 
+        condition : service_healthy
+    secrets:
+      - postgres_password
+      - postgres_user
+
+  db:
+    image: postgres:16
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    environment:
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_DB=clickdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    secrets:
+      - postgres_password
+      - postgres_user
+
+  ui:
+    build:
+      context: ./web_app
+      dockerfile: Dockerfile
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  postgres_user:
+    file: ./secrets/postgres_user.txt 
