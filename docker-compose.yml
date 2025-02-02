@@ -16,6 +16,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=0
       - PYTHONPATH=/app
+    ports:
+      - "8087:8087"
     command: >
       sh -c "export DATABASE_URL=postgresql://`cat /run/secrets/postgres_user`:`cat /run/secrets/postgres_password`@db:5432/clickdb &&
              python sample_api.py"
@@ -55,6 +57,8 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    ports:
+      - "8501:8501"
     depends_on:
       - api
 
