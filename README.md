@@ -7,9 +7,9 @@ Cette application web se compose d'une API backend et d'une interface frontend.
 .
 ├── api/
 
-│   ├── sample_api.py    # Implémentation de l'API backend
-│   ├── Dockerfile       # Configuration du conteneur API
-│   └── requirements.txt # Dépendances Python pour l'API
+    ├── sample_api.py    # Implémentation de l'API backend
+    ├── Dockerfile       # Configuration du conteneur API
+    └── requirements.txt # Dépendances Python pour l'API
 
 └── web_app/
 
