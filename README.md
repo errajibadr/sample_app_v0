@@ -70,7 +70,3 @@ Lancer les deux services avec Docker Compose :
 2. Committez vos changements (git commit -m 'Ajout d'une nouvelle fonctionnalité')
 3. Poussez vers la branche (git push origin feature/nouvelle-fonctionnalite)
 4. Ouvrez une Pull Request
-
-## Licence
-
-[Votre licence choisie] 
